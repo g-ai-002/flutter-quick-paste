@@ -1,6 +1,5 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:hotkey_manager/hotkey_manager.dart';
 import 'package:provider/provider.dart';
@@ -32,11 +31,19 @@ Future<void> main() async {
       await windowManager.hide();
     });
 
+    final storage = await StorageService.instance;
+    final modifiers = storage.hotkeyModifiers != 0
+        ? storage.hotkeyModifiers
+        : AppConstants.defaultHotkeyModifiers;
+    final key = storage.hotkeyKey != 0
+        ? storage.hotkeyKey
+        : AppConstants.defaultHotkeyKey;
+
     await hotKeyManager.unregisterAll();
     await hotKeyManager.register(
       HotKey(
-        key: PhysicalKeyboardKey.keyV,
-        modifiers: [HotKeyModifier.control, HotKeyModifier.shift],
+        key: AppConstants.keyFromHidUsage(key),
+        modifiers: AppConstants.modifiersFromMask(modifiers),
         scope: HotKeyScope.system,
       ),
       keyDownHandler: (hotKey) {
