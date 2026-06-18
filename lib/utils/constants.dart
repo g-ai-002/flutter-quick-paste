@@ -3,5 +3,5 @@ class AppConstants {
   AppConstants._();
 
   static const String appName = '快速粘贴';
-  static const String version = '0.1.1';
+  static const String version = '0.2.0';
 }
