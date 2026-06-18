@@ -1,6 +1,6 @@
 import 'dart:ffi' show sizeOf;
 import 'dart:io';
-import 'package:ffi/ffi.dart';
+import 'package:ffi/ffi.dart' show malloc;
 import 'package:flutter/services.dart';
 import 'package:win32/win32.dart';
 import 'package:window_manager/window_manager.dart';
@@ -21,30 +21,10 @@ class PasteService {
         await windowManager.hide();
         await Future.delayed(const Duration(milliseconds: 150));
 
-        // 模拟 Ctrl+V 使用 SendInput
-        final inputs = calloc.allocate<INPUT>(4);
-        final i0 = inputs.ref;
-        i0.type = INPUT_TYPE.INPUT_KEYBOARD;
-        i0.ki.wVk = VIRTUAL_KEY.VK_CONTROL;
-        i0.ki.dwFlags = 0;
-
-        final i1 = (inputs + 1).ref;
-        i1.type = INPUT_TYPE.INPUT_KEYBOARD;
-        i1.ki.wVk = 0x56;
-        i1.ki.dwFlags = 0;
-
-        final i2 = (inputs + 2).ref;
-        i2.type = INPUT_TYPE.INPUT_KEYBOARD;
-        i2.ki.wVk = 0x56;
-        i2.ki.dwFlags = KEYBD_EVENT_FLAGS.KEYEVENTF_KEYUP;
-
-        final i3 = (inputs + 3).ref;
-        i3.type = INPUT_TYPE.INPUT_KEYBOARD;
-        i3.ki.wVk = VIRTUAL_KEY.VK_CONTROL;
-        i3.ki.dwFlags = KEYBD_EVENT_FLAGS.KEYEVENTF_KEYUP;
-
-        SendInput(4, inputs, sizeOf<INPUT>());
-        calloc.free(inputs);
+        _sendKey(VIRTUAL_KEY.VK_CONTROL, false);
+        _sendKey(0x56, false);
+        _sendKey(0x56, true);
+        _sendKey(VIRTUAL_KEY.VK_CONTROL, true);
       }
 
       LogService.info('粘贴操作完成');
@@ -52,5 +32,14 @@ class PasteService {
       LogService.error('粘贴失败', e, st);
       rethrow;
     }
+  }
+
+  void _sendKey(int vk, bool keyUp) {
+    final input = malloc<INPUT>(sizeOf<INPUT>());
+    input.ref.type = INPUT_TYPE.INPUT_KEYBOARD;
+    input.ref.ki.wVk = vk;
+    input.ref.ki.dwFlags = keyUp ? KEYBD_EVENT_FLAGS.KEYEVENTF_KEYUP : 0;
+    SendInput(1, input, sizeOf<INPUT>());
+    malloc.free(input);
   }
 }
