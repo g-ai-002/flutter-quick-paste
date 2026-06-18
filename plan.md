@@ -20,6 +20,20 @@
 
 ## 版本历史
 
+### v0.2.4 (PATCH)
+- **状态**: 开发完成 ✅
+- **目标**: 修复 v0.2.3 workflow 报错 — `AppConstants.version` 与 pubspec.yaml 版本号不一致导致测试失败；同时引入版本号一致性的自动校验，避免再漏。
+- **任务**:
+  - [x] 修正 `lib/utils/constants.dart` 版本号到 0.2.4
+  - [x] 改造 `test/constants_test.dart`：版本号测试改为读取 pubspec.yaml 与 `AppConstants.version` 对比，杜绝单点漏改
+  - [x] 升级 pubspec.yaml 到 0.2.4
+  - [x] 更新 README.md / plan.md
+
+### v0.2.3 (PATCH)
+- **状态**: 发布失败（被 v0.2.4 取代） ❌
+- **目标**: 添加系统托盘支持，修复启动无界面问题
+- **失败原因**: 升级 pubspec.yaml 版本号后未同步 `AppConstants.version`，导致 `flutter test` 报错。
+
 ### v0.2.2 (PATCH)
 - **状态**: 开发完成 ✅
 - **目标**: 重构优化存量代码 — 热键可配置化、提取编辑对话框组件、改进粘贴服务、增强 StorageService 健壮性
