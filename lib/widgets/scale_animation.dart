@@ -4,6 +4,7 @@ class ScaleAnimation extends AnimatedWidget {
   final Widget? child;
 
   const ScaleAnimation({
+    super.key,
     required super.listenable,
     this.child,
   });

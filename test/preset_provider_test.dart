@@ -42,7 +42,7 @@ void main() {
   });
 
   group('搜索过滤', () {
-    List<PresetText> _filter(List<PresetText> presets, String query) {
+    List<PresetText> filter(List<PresetText> presets, String query) {
       if (query.isEmpty) return presets;
       final q = query.toLowerCase();
       return presets
@@ -57,7 +57,7 @@ void main() {
         PresetText(id: '1', title: '问候语', content: '你好'),
         PresetText(id: '2', title: '地址', content: '北京市'),
       ];
-      expect(_filter(presets, '').length, 2);
+      expect(filter(presets, '').length, 2);
     });
 
     test('按标题搜索', () {
@@ -65,7 +65,7 @@ void main() {
         PresetText(id: '1', title: '问候语', content: '你好'),
         PresetText(id: '2', title: '地址', content: '北京市'),
       ];
-      final result = _filter(presets, '问候');
+      final result = filter(presets, '问候');
       expect(result.length, 1);
       expect(result.first.id, '1');
     });
@@ -75,7 +75,7 @@ void main() {
         PresetText(id: '1', title: '问候语', content: '你好'),
         PresetText(id: '2', title: '地址', content: '北京市'),
       ];
-      final result = _filter(presets, '北京');
+      final result = filter(presets, '北京');
       expect(result.length, 1);
       expect(result.first.id, '2');
     });
@@ -84,15 +84,15 @@ void main() {
       final presets = [
         PresetText(id: '1', title: 'Hello', content: 'World'),
       ];
-      expect(_filter(presets, 'hello').length, 1);
-      expect(_filter(presets, 'world').length, 1);
+      expect(filter(presets, 'hello').length, 1);
+      expect(filter(presets, 'world').length, 1);
     });
 
     test('无匹配返回空列表', () {
       final presets = [
         PresetText(id: '1', title: '问候语', content: '你好'),
       ];
-      expect(_filter(presets, '不存在').length, 0);
+      expect(filter(presets, '不存在').length, 0);
     });
   });
 }

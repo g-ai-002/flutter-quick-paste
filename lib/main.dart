@@ -34,12 +34,12 @@ Future<void> main() async {
     await hotKeyManager.unregisterAll();
     await hotKeyManager.register(
       HotKey(
-        key: PhysicalKeyboardKey.keyV,
-        modifiers: [KeyModifier.control, KeyModifier.shift],
+        key: LogicalKeyboardKey.keyV,
+        modifiers: [HotKeyModifier.control, HotKeyModifier.shift],
         scope: HotKeyScope.system,
       ),
     );
-    hotKeyManager.addHotKeyListener((hotKey) {
+    hotKeyManager.stream.listen((hotKey) {
       windowManager.isVisible().then((visible) {
         if (visible) {
           windowManager.hide();
