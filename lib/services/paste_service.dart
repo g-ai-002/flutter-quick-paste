@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:ffi/ffi.dart';
 import 'package:flutter/services.dart';
 import 'package:win32/win32.dart';
 import 'package:window_manager/window_manager.dart';
@@ -20,13 +21,13 @@ class PasteService {
         await Future.delayed(const Duration(milliseconds: 150));
 
         // 模拟 Ctrl+V 使用 SendInput
-        final inputs = [
-          _keybdInput(VIRTUAL_KEY.VK_CONTROL, false),
-          _keybdInput(0x56, false),
-          _keybdInput(0x56, true),
-          _keybdInput(VIRTUAL_KEY.VK_CONTROL, true),
-        ];
-        SendInput(inputs.length, inputs, sizeOf<INPUT>());
+        final inputs = calloc<INPUT>(4);
+        _fillKeybdInput(inputs[0], VIRTUAL_KEY.VK_CONTROL, false);
+        _fillKeybdInput(inputs[1], 0x56, false);
+        _fillKeybdInput(inputs[2], 0x56, true);
+        _fillKeybdInput(inputs[3], VIRTUAL_KEY.VK_CONTROL, true);
+        SendInput(4, inputs, sizeOf<INPUT>());
+        calloc.free(inputs);
       }
 
       LogService.info('粘贴操作完成');
@@ -36,11 +37,9 @@ class PasteService {
     }
   }
 
-  INPUT _keybdInput(int vk, bool keyUp) {
-    final input = calloc<INPUT>();
-    input.ref.type = INPUT_KEYBOARD;
-    input.ref.ki.wVk = vk;
-    input.ref.ki.dwFlags = keyUp ? KEYBD_EVENT_FLAGS.KEYEVENTF_KEYUP : 0;
-    return input.ref;
+  void _fillKeybdInput(INPUT input, int vk, bool keyUp) {
+    input.type = INPUT_TYPE.INPUT_KEYBOARD;
+    input.ki.wVk = vk;
+    input.ki.dwFlags = keyUp ? KEYBD_EVENT_FLAGS.KEYEVENTF_KEYUP : 0;
   }
 }
