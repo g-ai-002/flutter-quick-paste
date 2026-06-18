@@ -34,21 +34,21 @@ Future<void> main() async {
     await hotKeyManager.unregisterAll();
     await hotKeyManager.register(
       HotKey(
-        key: LogicalKeyboardKey.keyV,
+        key: PhysicalKeyboardKey.keyV,
         modifiers: [HotKeyModifier.control, HotKeyModifier.shift],
         scope: HotKeyScope.system,
       ),
+      keyDownHandler: (hotKey) {
+        windowManager.isVisible().then((visible) {
+          if (visible) {
+            windowManager.hide();
+          } else {
+            windowManager.show();
+            windowManager.focus();
+          }
+        });
+      },
     );
-    hotKeyManager.stream.listen((hotKey) {
-      windowManager.isVisible().then((visible) {
-        if (visible) {
-          windowManager.hide();
-        } else {
-          windowManager.show();
-          windowManager.focus();
-        }
-      });
-    });
   }
 
   final storage = await StorageService.instance;
