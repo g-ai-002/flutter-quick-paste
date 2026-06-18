@@ -157,7 +157,7 @@ class _HomePageState extends State<HomePage> {
       context: context,
       builder: (_) => EditPresetDialog(preset: preset),
     ).then((result) {
-      if (result == null) return;
+      if (result == null || !mounted) return;
       final title = result['title']!;
       final content = result['content']!;
       if (preset != null) {
