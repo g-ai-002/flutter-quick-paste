@@ -52,13 +52,13 @@ class HomePage extends StatelessWidget {
             )
           : ReorderableListView.builder(
               itemCount: presets.length,
-              onReorder: (oldIndex, newIndex) {
+              onReorderItem: (oldIndex, newIndex) {
                 context.read<PresetProvider>().move(oldIndex, newIndex);
               },
               buildDefaultDragHandles: true,
               proxyDecorator: (child, index, animation) {
                 return _ScaleAnimation(
-                  animation: animation,
+                  listenable: animation,
                   child: child,
                 );
               },
@@ -151,7 +151,7 @@ class HomePage extends StatelessWidget {
               if (isEdit) {
                 context
                     .read<PresetProvider>()
-                    .update(preset!.id, title, content);
+                    .update(preset.id, title, content);
               } else {
                 context.read<PresetProvider>().add(title, content);
               }

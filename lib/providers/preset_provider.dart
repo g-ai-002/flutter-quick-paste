@@ -38,7 +38,7 @@ class PresetProvider extends ChangeNotifier {
   }
 
   void move(int oldIndex, int newIndex) {
-    if (oldIndex < newIndex) newIndex--;
+    // onReorderItem 已自动调整 newIndex，无需手动减一
     final item = _presets.removeAt(oldIndex);
     _presets.insert(newIndex, item);
     _save();

@@ -19,11 +19,14 @@ class PasteService {
         await windowManager.hide();
         await Future.delayed(const Duration(milliseconds: 150));
 
-        // 模拟 Ctrl+V
-        keybd_event(VK_CONTROL, 0, 0, 0);
-        keybd_event(0x56, 0, 0, 0);
-        keybd_event(0x56, 0, KEYEVENTF_KEYUP, 0);
-        keybd_event(VK_CONTROL, 0, KEYEVENTF_KEYUP, 0);
+        // 模拟 Ctrl+V 使用 SendInput
+        final inputs = [
+          _keybdInput(VIRTUAL_KEY.VK_CONTROL, false),
+          _keybdInput(0x56, false),
+          _keybdInput(0x56, true),
+          _keybdInput(VIRTUAL_KEY.VK_CONTROL, true),
+        ];
+        SendInput(inputs.length, inputs, sizeOf<INPUT>());
       }
 
       LogService.info('粘贴操作完成');
@@ -31,5 +34,13 @@ class PasteService {
       LogService.error('粘贴失败', e, st);
       rethrow;
     }
+  }
+
+  INPUT _keybdInput(int vk, bool keyUp) {
+    final input = calloc<INPUT>();
+    input.ref.type = INPUT_KEYBOARD;
+    input.ref.ki.wVk = vk;
+    input.ref.ki.dwFlags = keyUp ? KEYBD_EVENT_FLAGS.KEYEVENTF_KEYUP : 0;
+    return input.ref;
   }
 }
