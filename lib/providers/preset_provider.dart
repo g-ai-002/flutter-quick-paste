@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 import '../models/preset_text.dart';
 import '../services/storage_service.dart';
 import '../services/log_service.dart';
+import '../services/preset_io_service.dart';
 
 /// 预置文本状态管理
 class PresetProvider extends ChangeNotifier {
@@ -59,6 +60,48 @@ class PresetProvider extends ChangeNotifier {
     final item = _presets.removeAt(oldIndex);
     _presets.insert(newIndex, item);
     _save();
+  }
+
+  /// 导出当前预置文本为 JSON 字符串（不含 IO 操作）
+  String exportToJson() => PresetIoService.instance.exportToJson(_presets);
+
+  /// 从 JSON 字符串导入预置文本，返回导入摘要。
+  Future<ImportResult> importFromJson(
+    String raw, {
+    ImportStrategy strategy = ImportStrategy.merge,
+  }) async {
+    final parsed = PresetIoService.instance.parseImport(raw);
+    int added = 0;
+    int skipped = 0;
+
+    if (strategy == ImportStrategy.replace) {
+      _presets
+        ..clear()
+        ..addAll(parsed);
+      added = parsed.length;
+    } else {
+      final existingIds = _presets.map((p) => p.id).toSet();
+      for (final p in parsed) {
+        if (existingIds.contains(p.id)) {
+          skipped++;
+        } else {
+          _presets.add(p);
+          existingIds.add(p.id);
+          added++;
+        }
+      }
+    }
+
+    await _save();
+    LogService.instance.info(
+      '导入完成: 策略=${strategy.name}, 解析=${parsed.length}, 新增=$added, 跳过=$skipped',
+    );
+    return ImportResult(
+      parsed: parsed.length,
+      added: added,
+      skipped: skipped,
+      strategy: strategy,
+    );
   }
 
   Future<void> _save() async {
