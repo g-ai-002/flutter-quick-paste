@@ -16,8 +16,6 @@ dependencies:
   path_provider: 2.1.5
   path: 1.9.1
   window_manager: 0.5.1
-  win32: 5.10.1
-  ffi: 2.1.4
 
 dev_dependencies:
   flutter_test:

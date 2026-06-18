@@ -1,8 +1,5 @@
-import 'dart:ffi' show sizeOf;
 import 'dart:io';
-import 'package:ffi/ffi.dart' show malloc;
 import 'package:flutter/services.dart';
-import 'package:win32/win32.dart';
 import 'package:window_manager/window_manager.dart';
 import 'log_service.dart';
 
@@ -21,10 +18,12 @@ class PasteService {
         await windowManager.hide();
         await Future.delayed(const Duration(milliseconds: 150));
 
-        _sendKey(VIRTUAL_KEY.VK_CONTROL, false);
-        _sendKey(0x56, false);
-        _sendKey(0x56, true);
-        _sendKey(VIRTUAL_KEY.VK_CONTROL, true);
+        // 使用 PowerShell SendKeys 模拟 Ctrl+V
+        await Process.run('powershell', [
+          '-NoProfile',
+          '-Command',
+          r'Add-Type -AssemblyName System.Windows.Forms; [System.Windows.Forms.SendKeys]::SendWait("^v")',
+        ]);
       }
 
       LogService.info('粘贴操作完成');
@@ -32,14 +31,5 @@ class PasteService {
       LogService.error('粘贴失败', e, st);
       rethrow;
     }
-  }
-
-  void _sendKey(int vk, bool keyUp) {
-    final input = malloc<INPUT>(sizeOf<INPUT>());
-    input.ref.type = INPUT_TYPE.INPUT_KEYBOARD;
-    input.ref.ki.wVk = vk;
-    input.ref.ki.dwFlags = keyUp ? KEYBD_EVENT_FLAGS.KEYEVENTF_KEYUP : 0;
-    SendInput(1, input, sizeOf<INPUT>());
-    malloc.free(input);
   }
 }
