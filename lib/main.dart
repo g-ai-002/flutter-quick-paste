@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:hotkey_manager/hotkey_manager.dart';
 import 'package:provider/provider.dart';
 import 'package:window_manager/window_manager.dart';
 
@@ -26,9 +27,27 @@ Future<void> main() async {
       titleBarStyle: TitleBarStyle.normal,
       title: AppConstants.appName,
     );
-    windowManager.waitUntilReadyToShow(opts, () async {
-      await windowManager.show();
-      await windowManager.focus();
+    await windowManager.waitUntilReadyToShow(opts, () async {
+      await windowManager.hide();
+    });
+
+    await hotKeyManager.unregisterAll();
+    await hotKeyManager.register(
+      HotKey(
+        key: PhysicalKeyboardKey.keyV,
+        modifiers: [KeyModifier.control, KeyModifier.shift],
+        scope: HotKeyScope.system,
+      ),
+    );
+    hotKeyManager.addHotKeyListener((hotKey) {
+      windowManager.isVisible().then((visible) {
+        if (visible) {
+          windowManager.hide();
+        } else {
+          windowManager.show();
+          windowManager.focus();
+        }
+      });
     });
   }
 
