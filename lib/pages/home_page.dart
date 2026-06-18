@@ -6,6 +6,7 @@ import '../services/paste_service.dart';
 import '../services/log_service.dart';
 import '../widgets/preset_tile.dart';
 import '../widgets/scale_animation.dart';
+import '../widgets/edit_preset_dialog.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -152,60 +153,18 @@ class _HomePageState extends State<HomePage> {
   }
 
   void _showEditDialog(BuildContext context, {PresetText? preset}) {
-    final titleCtrl = TextEditingController(text: preset?.title ?? '');
-    final contentCtrl = TextEditingController(text: preset?.content ?? '');
-    final isEdit = preset != null;
-
-    showDialog(
+    showDialog<Map<String, String>>(
       context: context,
-      builder: (ctx) => AlertDialog(
-        title: Text(isEdit ? '编辑预置文本' : '添加预置文本'),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            TextField(
-              controller: titleCtrl,
-              decoration: const InputDecoration(
-                labelText: '标题',
-                hintText: '输入标题',
-              ),
-              autofocus: true,
-            ),
-            const SizedBox(height: 12),
-            TextField(
-              controller: contentCtrl,
-              decoration: const InputDecoration(
-                labelText: '内容',
-                hintText: '输入要粘贴的文本内容',
-              ),
-              maxLines: 5,
-              minLines: 3,
-            ),
-          ],
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(ctx),
-            child: const Text('取消'),
-          ),
-          FilledButton(
-            onPressed: () {
-              final title = titleCtrl.text.trim();
-              final content = contentCtrl.text;
-              if (title.isEmpty) return;
-              if (isEdit) {
-                context
-                    .read<PresetProvider>()
-                    .update(preset.id, title, content);
-              } else {
-                context.read<PresetProvider>().add(title, content);
-              }
-              Navigator.pop(ctx);
-            },
-            child: const Text('保存'),
-          ),
-        ],
-      ),
-    );
+      builder: (_) => EditPresetDialog(preset: preset),
+    ).then((result) {
+      if (result == null) return;
+      final title = result['title']!;
+      final content = result['content']!;
+      if (preset != null) {
+        context.read<PresetProvider>().update(preset.id, title, content);
+      } else {
+        context.read<PresetProvider>().add(title, content);
+      }
+    });
   }
 }
