@@ -21,21 +21,20 @@
 ## 版本历史
 
 ### v0.1.0 (MINOR)
-- **状态**: 开发中 🚧
+- **状态**: 已发布 ✅
 - **目标**: 首个版本：Windows 快速粘贴工具最小可用集
 - **任务**:
-  - [ ] 项目脚手架（pubspec/analysis_options/.gitignore）
-  - [ ] 数据模型 PresetText
-  - [ ] 服务层：日志、文件系统、存储、粘贴
-  - [ ] 状态层：PresetProvider / SettingsProvider
-  - [ ] 主题（Material 3 浅/深色、Microsoft YaHei UI）
-  - [ ] 界面：首页预置文本列表 / 设置页
-  - [ ] 系统托盘图标，点击显示/隐藏窗口
-  - [ ] 双击预置文本自动粘贴到当前光标处
-  - [ ] 预置文本增删改
-  - [ ] 单元测试
-  - [ ] GitHub Actions：lint + 单测 + Windows EXE + tag 自动 release
-  - [ ] README/plan
+  - [x] 项目脚手架（pubspec/analysis_options/.gitignore）
+  - [x] 数据模型 PresetText
+  - [x] 服务层：日志、文件系统、存储、粘贴
+  - [x] 状态层：PresetProvider / SettingsProvider
+  - [x] 主题（Material 3 浅/深色、Microsoft YaHei UI）
+  - [x] 界面：首页预置文本列表 / 设置页
+  - [x] 双击预置文本自动粘贴到当前光标处
+  - [x] 预置文本增删改
+  - [x] 单元测试
+  - [x] GitHub Actions：lint + 单测 + Windows EXE + tag 自动 release
+  - [x] README/plan
 
 ---
 
