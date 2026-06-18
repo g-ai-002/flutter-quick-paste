@@ -23,10 +23,26 @@ class PasteService {
 
         // 模拟 Ctrl+V 使用 SendInput
         final inputs = calloc.allocate<INPUT>(4);
-        _fillKeybdInput(inputs[0], VIRTUAL_KEY.VK_CONTROL, false);
-        _fillKeybdInput(inputs[1], 0x56, false);
-        _fillKeybdInput(inputs[2], 0x56, true);
-        _fillKeybdInput(inputs[3], VIRTUAL_KEY.VK_CONTROL, true);
+        final i0 = inputs.elementAt(0).ref;
+        i0.type = INPUT_TYPE.INPUT_KEYBOARD;
+        i0.ki.wVk = VIRTUAL_KEY.VK_CONTROL;
+        i0.ki.dwFlags = 0;
+
+        final i1 = inputs.elementAt(1).ref;
+        i1.type = INPUT_TYPE.INPUT_KEYBOARD;
+        i1.ki.wVk = 0x56;
+        i1.ki.dwFlags = 0;
+
+        final i2 = inputs.elementAt(2).ref;
+        i2.type = INPUT_TYPE.INPUT_KEYBOARD;
+        i2.ki.wVk = 0x56;
+        i2.ki.dwFlags = KEYBD_EVENT_FLAGS.KEYEVENTF_KEYUP;
+
+        final i3 = inputs.elementAt(3).ref;
+        i3.type = INPUT_TYPE.INPUT_KEYBOARD;
+        i3.ki.wVk = VIRTUAL_KEY.VK_CONTROL;
+        i3.ki.dwFlags = KEYBD_EVENT_FLAGS.KEYEVENTF_KEYUP;
+
         SendInput(4, inputs, sizeOf<INPUT>());
         calloc.free(inputs);
       }
@@ -36,11 +52,5 @@ class PasteService {
       LogService.error('粘贴失败', e, st);
       rethrow;
     }
-  }
-
-  void _fillKeybdInput(INPUT input, int vk, bool keyUp) {
-    input.type = INPUT_TYPE.INPUT_KEYBOARD;
-    input.ki.wVk = vk;
-    input.ki.dwFlags = keyUp ? KEYBD_EVENT_FLAGS.KEYEVENTF_KEYUP : 0;
   }
 }
