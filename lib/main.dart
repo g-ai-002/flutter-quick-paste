@@ -166,7 +166,7 @@ Future<SystemTray> _initSystemTray() async {
   return systemTray;
 }
 
-/// 用 dart:ui 绘制 32×32 绿色圆形图标 → 导出 PNG → 写入临时文件
+/// 用 dart:ui 绘制 32×32 绿色圆形图标 → 导出 PNG → 包裹为 ICO → 写入临时文件
 Future<String> _createTrayIconFile() async {
   const size = 32.0;
   final recorder = ui.PictureRecorder();
@@ -196,11 +196,57 @@ Future<String> _createTrayIconFile() async {
     throw Exception('生成托盘图标失败：toByteData 返回 null');
   }
 
+  final pngBytes = byteData.buffer.asUint8List();
+  // ICO 容器要求：Windows LoadImage(IMAGE_ICON) 只能加载 .ico 文件，
+  // ICO 格式允许内部嵌入 PNG 数据块。
+  final icoBytes = _pngToIco(pngBytes);
+
   final tmpDir = Directory.systemTemp.createTempSync('quick_paste_icon_');
   final iconFile =
-      File('${tmpDir.path}${Platform.pathSeparator}tray_icon.png');
-  await iconFile.writeAsBytes(byteData.buffer.asUint8List());
+      File('${tmpDir.path}${Platform.pathSeparator}tray_icon.ico');
+  await iconFile.writeAsBytes(icoBytes);
   return iconFile.path;
+}
+
+/// 将 PNG 字节包裹为 ICO 格式，使 Windows LoadImage 能正常加载。
+///
+/// ICO 文件结构：
+///   [6 字节头部] + [16 字节目录项] + [PNG 数据]
+List<int> _pngToIco(List<int> pngBytes) {
+  final bytes = <int>[];
+
+  // --- ICO 头部 (6 bytes) ---
+  bytes.addAll([0x00, 0x00]); // 保留
+  bytes.addAll([0x01, 0x00]); // 类型: 1=ICO
+  bytes.addAll([0x01, 0x00]); // 图像数量: 1
+
+  // --- 目录项 (16 bytes) ---
+  final imageSize = pngBytes.length;
+  const imageOffset = 22; // 6 + 16
+
+  bytes.addAll([
+    0x20, // 宽度: 32
+    0x20, // 高度: 32
+    0x00, // 颜色数: 0 (>256)
+    0x00, // 保留
+    0x01, 0x00, // 颜色平面: 1
+    0x20, 0x00, // 每像素位数: 32
+    // 图像数据大小 (little-endian)
+    imageSize & 0xFF,
+    (imageSize >> 8) & 0xFF,
+    (imageSize >> 16) & 0xFF,
+    (imageSize >> 24) & 0xFF,
+    // 图像数据偏移 (little-endian)
+    imageOffset & 0xFF,
+    (imageOffset >> 8) & 0xFF,
+    (imageOffset >> 16) & 0xFF,
+    (imageOffset >> 24) & 0xFF,
+  ]);
+
+  // --- PNG 数据 ---
+  bytes.addAll(pngBytes);
+
+  return bytes;
 }
 
 class QuickPasteApp extends StatelessWidget {
