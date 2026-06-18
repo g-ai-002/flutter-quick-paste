@@ -7,6 +7,7 @@ import 'log_service.dart';
 class StorageService {
   StorageService._();
   static StorageService? _instance;
+  static bool _initializing = false;
   late SharedPreferences _prefs;
 
   static const String _keyPresets = 'presets_v1';
@@ -15,9 +16,22 @@ class StorageService {
   static const String _keyHotkeyKey = 'hotkey_key';
 
   static Future<StorageService> get instance async {
-    _instance ??= StorageService._();
-    await _instance!._init();
-    return _instance!;
+    if (_instance != null) return _instance!;
+    if (_initializing) {
+      // 等待正在进行的初始化完成
+      for (int i = 0; i < 50 && _instance == null; i++) {
+        await Future.delayed(const Duration(milliseconds: 100));
+      }
+      if (_instance != null) return _instance!;
+    }
+    _initializing = true;
+    try {
+      _instance = StorageService._();
+      await _instance!._init();
+      return _instance!;
+    } finally {
+      _initializing = false;
+    }
   }
 
   Future<void> _init() async {
