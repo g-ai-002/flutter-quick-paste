@@ -65,6 +65,9 @@ Future<void> _initWindows() async {
   try {
     await _initSystemTray();
     LogService.instance.info('系统托盘已创建');
+    // 托盘初始化可能抢占窗口焦点，显式恢复
+    await windowManager.show();
+    await windowManager.focus();
   } catch (e, st) {
     LogService.instance.error('系统托盘初始化失败（不影响核心功能）', e, st);
   }
@@ -102,6 +105,10 @@ Future<void> _initWindows() async {
   } catch (e, st) {
     LogService.instance.error('全局热键注册失败（仍可通过托盘图标操作）', e, st);
   }
+
+  // 最终确保窗口可见
+  await windowManager.show();
+  await windowManager.focus();
 }
 
 /// 窗口关闭事件处理器：拦截原生关闭 → 隐藏到托盘而非退出
