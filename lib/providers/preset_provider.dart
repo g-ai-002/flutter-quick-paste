@@ -7,12 +7,29 @@ import '../services/log_service.dart';
 class PresetProvider extends ChangeNotifier {
   final StorageService _storage;
   List<PresetText> _presets = [];
+  String _searchQuery = '';
 
   PresetProvider(this._storage) {
     _presets = _storage.loadPresets();
   }
 
   List<PresetText> get presets => List.unmodifiable(_presets);
+
+  String get searchQuery => _searchQuery;
+
+  List<PresetText> get filteredPresets {
+    if (_searchQuery.isEmpty) return _presets;
+    final q = _searchQuery.toLowerCase();
+    return _presets.where((p) {
+      return p.title.toLowerCase().contains(q) ||
+          p.content.toLowerCase().contains(q);
+    }).toList();
+  }
+
+  void setSearchQuery(String query) {
+    _searchQuery = query;
+    notifyListeners();
+  }
 
   void add(String title, String content) {
     final id = DateTime.now().microsecondsSinceEpoch.toString();
