@@ -1,3 +1,4 @@
+import 'dart:ffi' show sizeOf;
 import 'dart:io';
 import 'package:ffi/ffi.dart';
 import 'package:flutter/services.dart';
@@ -21,7 +22,7 @@ class PasteService {
         await Future.delayed(const Duration(milliseconds: 150));
 
         // 模拟 Ctrl+V 使用 SendInput
-        final inputs = calloc<INPUT>(4);
+        final inputs = calloc.allocate<INPUT>(4);
         _fillKeybdInput(inputs[0], VIRTUAL_KEY.VK_CONTROL, false);
         _fillKeybdInput(inputs[1], 0x56, false);
         _fillKeybdInput(inputs[2], 0x56, true);
