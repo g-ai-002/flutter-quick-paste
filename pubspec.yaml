@@ -1,7 +1,7 @@
 name: flutter_quick_paste
 description: 快速粘贴工具 - 快捷键弹出预置文本列表，双击自动粘贴
 publish_to: 'none'
-version: 0.2.2
+version: 0.2.3
 
 environment:
   sdk: '>=3.10.0 <4.0.0'
