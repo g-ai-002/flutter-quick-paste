@@ -6,9 +6,10 @@
 
 - 📋 预置文本管理：添加、编辑、删除、拖拽排序
 - 🔍 文本搜索过滤：按标题或内容快速查找
+- 📁 导入/导出预置文本（JSON）：备份与跨设备迁移
 - ⌨️ 双击预置文本自动粘贴到当前光标处
 - 🌓 浅色/深色主题切换
-- 🪟 Windows 10+ 原生支持
+- 🪟 Windows 10+ 原生支持，系统托盘常驻
 - 📝 完整日志系统，方便排障
 
 ## 系统要求
@@ -40,13 +41,20 @@ flutter build windows --release
 - Flutter 3.44.1
 - Provider 状态管理
 - Material 3 设计
-- win32 API 粘贴
+- file_selector 文件读写
+- system_tray Windows 托盘
+- hotkey_manager 全局热键
 
 ## 许可证
 
 MIT License
 
 ## 版本历史
+
+### v0.3.0
+- 新增导入/导出预置文本功能：以 JSON 文件备份、跨设备迁移
+- 导入支持「合并」与「覆盖」两种策略，对损坏数据宽容处理
+- 同步合并 v0.2.4 之后的启动/托盘修复（runApp 先行、首帧后初始化、asset ICO 托盘图标）
 
 ### v0.2.4
 - 修复 v0.2.3 发布流水线测试失败：`AppConstants.version` 未与 pubspec.yaml 同步

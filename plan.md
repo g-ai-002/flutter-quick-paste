@@ -8,8 +8,8 @@
 
 ## 中期目标
 - [ ] 预置文本分组/分类管理
-- [ ] 文本搜索过滤
-- [ ] 导入/导出预置文本
+- [x] 文本搜索过滤（v0.2.0）
+- [x] 导入/导出预置文本（v0.3.0）
 - [ ] Android 版本（手机+折叠屏+平板自适应）
 - [ ] 云同步预置文本
 
@@ -19,6 +19,17 @@
 ---
 
 ## 版本历史
+
+### v0.3.0 (MINOR)
+- **状态**: 开发完成 ✅
+- **目标**: 导入/导出预置文本 — 用户可将本地预置文本导出为 JSON 文件备份/迁移，也可从外部 JSON 文件导入到当前列表（合并或覆盖）。同时把 v0.2.4 之后未发布的启动/托盘修复（asset ICO 托盘图标、runApp 先行、首帧后初始化托盘热键）随本版本一起发布。
+- **任务**:
+  - [x] 新增 `lib/services/preset_io_service.dart`：导出当前预置文本为 JSON 字符串；从 JSON 字符串解析成 `List<PresetText>`，对错误数据宽容处理并记录日志
+  - [x] `PresetProvider` 添加 `importPresets(merge|replace)` 方法
+  - [x] 设置页新增"导入"和"导出"两个入口，调用系统文件选择/保存对话框（使用 `file_selector` 插件）
+  - [x] 单元测试覆盖序列化、反序列化、合并/覆盖语义、损坏数据容错
+  - [x] 升级版本号到 0.3.0（pubspec + AppConstants.version）
+  - [x] 更新 README.md / plan.md
 
 ### v0.2.4 (PATCH)
 - **状态**: 开发完成 ✅
@@ -110,3 +121,6 @@
 - shared_preferences: 2.5.5
 - path_provider: 2.1.5
 - path: 1.9.1
+- hotkey_manager: 0.2.3
+- system_tray: 2.0.3
+- file_selector: 1.0.3
