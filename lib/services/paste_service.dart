@@ -23,22 +23,22 @@ class PasteService {
 
         // 模拟 Ctrl+V 使用 SendInput
         final inputs = calloc.allocate<INPUT>(4);
-        final i0 = inputs.elementAt(0).ref;
+        final i0 = inputs.ref;
         i0.type = INPUT_TYPE.INPUT_KEYBOARD;
         i0.ki.wVk = VIRTUAL_KEY.VK_CONTROL;
         i0.ki.dwFlags = 0;
 
-        final i1 = inputs.elementAt(1).ref;
+        final i1 = (inputs + 1).ref;
         i1.type = INPUT_TYPE.INPUT_KEYBOARD;
         i1.ki.wVk = 0x56;
         i1.ki.dwFlags = 0;
 
-        final i2 = inputs.elementAt(2).ref;
+        final i2 = (inputs + 2).ref;
         i2.type = INPUT_TYPE.INPUT_KEYBOARD;
         i2.ki.wVk = 0x56;
         i2.ki.dwFlags = KEYBD_EVENT_FLAGS.KEYEVENTF_KEYUP;
 
-        final i3 = inputs.elementAt(3).ref;
+        final i3 = (inputs + 3).ref;
         i3.type = INPUT_TYPE.INPUT_KEYBOARD;
         i3.ki.wVk = VIRTUAL_KEY.VK_CONTROL;
         i3.ki.dwFlags = KEYBD_EVENT_FLAGS.KEYEVENTF_KEYUP;
