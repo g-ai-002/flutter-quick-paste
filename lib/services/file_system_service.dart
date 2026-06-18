@@ -9,10 +9,10 @@ class FileSystemService {
 
   Future<Directory> getLogRoot() async {
     if (_logDir != null) return _logDir!;
-    final home = Platform.isWindows
-        ? Platform.environment['USERPROFILE'] ?? '.'
-        : Platform.environment['HOME'] ?? '.';
-    _logDir = Directory('$home${Platform.pathSeparator}logs');
+    final base = Platform.isWindows
+        ? '${Platform.environment['LOCALAPPDATA'] ?? '.${Platform.pathSeparator}AppData${Platform.pathSeparator}Local'}${Platform.pathSeparator}quick_paste'
+        : '${Platform.environment['HOME'] ?? '.'}${Platform.pathSeparator}Library${Platform.pathSeparator}Logs${Platform.pathSeparator}quick_paste';
+    _logDir = Directory('$base${Platform.pathSeparator}logs');
     if (!await _logDir!.exists()) await _logDir!.create(recursive: true);
     return _logDir!;
   }
