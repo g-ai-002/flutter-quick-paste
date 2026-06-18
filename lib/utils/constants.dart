@@ -6,7 +6,7 @@ class AppConstants {
   AppConstants._();
 
   static const String appName = '快速粘贴';
-  static const String version = '0.2.3';
+  static const String version = '0.2.4';
 
   /// 热键修饰键位掩码
   static const int modCtrl = 1;

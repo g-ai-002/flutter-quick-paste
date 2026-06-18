@@ -1,5 +1,18 @@
+import 'dart:io';
+
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_quick_paste/utils/constants.dart';
+
+String _readPubspecVersion() {
+  final file = File('pubspec.yaml');
+  for (final line in file.readAsLinesSync()) {
+    final trimmed = line.trim();
+    if (trimmed.startsWith('version:')) {
+      return trimmed.substring('version:'.length).trim();
+    }
+  }
+  fail('pubspec.yaml 缺少 version 字段');
+}
 
 void main() {
   group('AppConstants', () {
@@ -7,8 +20,8 @@ void main() {
       expect(AppConstants.appName, '快速粘贴');
     });
 
-    test('版本号', () {
-      expect(AppConstants.version, '0.2.2');
+    test('版本号与 pubspec.yaml 保持一致', () {
+      expect(AppConstants.version, _readPubspecVersion());
     });
 
     test('热键修饰键掩码互不重叠', () {
