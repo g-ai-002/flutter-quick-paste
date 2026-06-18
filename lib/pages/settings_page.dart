@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../providers/settings_provider.dart';
+import '../utils/constants.dart';
 
 class SettingsPage extends StatelessWidget {
   const SettingsPage({super.key});
@@ -31,7 +32,7 @@ class SettingsPage extends StatelessWidget {
               children: [
                 Text('关于', style: theme.textTheme.titleSmall),
                 const SizedBox(height: 8),
-                Text('快速粘贴 v0.1.0', style: theme.textTheme.bodyMedium),
+                Text('快速粘贴 v${AppConstants.version}', style: theme.textTheme.bodyMedium),
                 const SizedBox(height: 4),
                 Text(
                   '快捷键弹出预置文本列表，双击自动粘贴到当前光标处',

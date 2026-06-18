@@ -5,6 +5,7 @@ import '../providers/preset_provider.dart';
 import '../services/paste_service.dart';
 import '../services/log_service.dart';
 import '../widgets/preset_tile.dart';
+import '../widgets/scale_animation.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -57,7 +58,7 @@ class HomePage extends StatelessWidget {
               },
               buildDefaultDragHandles: true,
               proxyDecorator: (child, index, animation) {
-                return _ScaleAnimation(
+                return ScaleAnimation(
                   listenable: animation,
                   child: child,
                 );
@@ -78,9 +79,8 @@ class HomePage extends StatelessWidget {
 
   void _pasteText(PresetText preset) {
     PasteService.instance.paste(preset.content).catchError((e) {
-      LogService.error('粘贴失败: ${preset.title}', e);
+      LogService.instance.error('粘贴失败: ${preset.title}', e);
     });
-    LogService.info('粘贴预置文本: ${preset.title}');
   }
 
   void _confirmDelete(BuildContext context, PresetText preset) {
@@ -160,29 +160,6 @@ class HomePage extends StatelessWidget {
             child: const Text('保存'),
           ),
         ],
-      ),
-    );
-  }
-}
-
-class _ScaleAnimation extends AnimatedWidget {
-  final Widget? child;
-
-  const _ScaleAnimation({
-    required super.listenable,
-    this.child,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    final animation = listenable as Animation<double>;
-    final scale = 0.95 + (animation.value * 0.05);
-    return Transform.scale(
-      scale: scale,
-      child: Material(
-        elevation: 4,
-        borderRadius: BorderRadius.circular(8),
-        child: child,
       ),
     );
   }

@@ -8,7 +8,7 @@ void main() {
     });
 
     test('版本号', () {
-      expect(AppConstants.version, '0.1.0');
+      expect(AppConstants.version, '0.1.1');
     });
   });
 }

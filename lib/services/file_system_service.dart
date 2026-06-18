@@ -1,19 +1,11 @@
 import 'dart:io';
-import 'package:path_provider/path_provider.dart';
 
-/// 文件系统服务：提供应用数据目录和日志目录
+/// 文件系统服务：提供日志目录
 class FileSystemService {
   FileSystemService._();
   static final FileSystemService instance = FileSystemService._();
 
-  Directory? _appDir;
   Directory? _logDir;
-
-  Future<Directory> getAppDir() async {
-    _appDir ??= await getApplicationSupportDirectory();
-    if (!await _appDir!.exists()) await _appDir!.create(recursive: true);
-    return _appDir!;
-  }
 
   Future<Directory> getLogRoot() async {
     if (_logDir != null) return _logDir!;

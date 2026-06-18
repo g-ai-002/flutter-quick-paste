@@ -19,7 +19,7 @@ class PresetProvider extends ChangeNotifier {
     final preset = PresetText(id: id, title: title, content: content);
     _presets.add(preset);
     _save();
-    LogService.info('添加预置文本: $title');
+    LogService.instance.info('添加预置文本: $title');
   }
 
   void update(String id, String title, String content) {
@@ -27,14 +27,14 @@ class PresetProvider extends ChangeNotifier {
     if (idx == -1) return;
     _presets[idx] = _presets[idx].copyWith(title: title, content: content);
     _save();
-    LogService.info('更新预置文本: $title');
+    LogService.instance.info('更新预置文本: $title');
   }
 
   void remove(String id) {
     final preset = _presets.firstWhere((p) => p.id == id);
     _presets.removeWhere((p) => p.id == id);
     _save();
-    LogService.info('删除预置文本: ${preset.title}');
+    LogService.instance.info('删除预置文本: ${preset.title}');
   }
 
   void move(int oldIndex, int newIndex) {

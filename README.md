@@ -44,3 +44,18 @@ flutter build windows --release
 ## 许可证
 
 MIT License
+
+## 版本历史
+
+### v0.1.1
+- 统一服务层单例模式
+- 修复设置页硬编码版本号
+- 提取 ScaleAnimation 组件
+- 移除未使用的代码
+
+### v0.1.0
+- 首个版本：Windows 快速粘贴工具最小可用集
+- 预置文本增删改、拖拽排序
+- 双击自动粘贴到当前光标处
+- 浅色/深色主题切换
+- Material 3 设计

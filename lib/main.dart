@@ -33,8 +33,8 @@ Future<void> main() async {
   }
 
   final storage = await StorageService.instance;
-  await LogService.init();
-  LogService.info('应用启动: ${AppConstants.appName} v${AppConstants.version}');
+  await LogService.instance.init();
+  LogService.instance.info('应用启动: ${AppConstants.appName} v${AppConstants.version}');
 
   runApp(QuickPasteApp(storage: storage));
 }

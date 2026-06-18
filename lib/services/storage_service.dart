@@ -35,7 +35,7 @@ class StorageService {
           .map((e) => PresetText.fromJson(e as Map<String, dynamic>))
           .toList();
     } catch (e, st) {
-      LogService.error('加载预置文本失败', e, st);
+      LogService.instance.error('加载预置文本失败', e, st);
       return [];
     }
   }

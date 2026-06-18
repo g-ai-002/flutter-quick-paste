@@ -20,6 +20,18 @@
 
 ## 版本历史
 
+### v0.1.1 (PATCH)
+- **状态**: 已发布 ✅
+- **目标**: 重构优化存量代码，统一服务层单例模式，消除硬编码
+- **任务**:
+  - [x] 统一服务层单例模式 (LogService/StorageService/PasteService/FileSystemService)
+  - [x] 修复 SettingsPage 硬编码版本号 → 使用 AppConstants.version
+  - [x] 移除 HomePage 中重复的日志记录
+  - [x] 提取 _ScaleAnimation 到 widgets 目录
+  - [x] 移除 FileSystemService 中未使用的 getAppDir 方法
+  - [x] 改进 LogService 缓冲区管理
+  - [x] 更新版本号到 0.1.1
+
 ### v0.1.0 (MINOR)
 - **状态**: 已发布 ✅
 - **目标**: 首个版本：Windows 快速粘贴工具最小可用集
